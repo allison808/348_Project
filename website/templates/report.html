@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Report{% endblock %}
+{% block content %}
+    <h1 align="center">Report</h1>
+    <div class="report-container">
+        <h2>Statistics:</h2>
+        <p><strong>Average Rating:</strong> 
+            {% if avg_rating %}
+                {{ avg_rating | round(2) }}
+            {% else %}
+                No reviews yet.
+            {% endif %}
+        </p>
+        <p><strong>Most Reviewed Restaurant:</strong> 
+            {% if most_reviewed_name %}
+                {{ most_reviewed_name }} ({{ most_reviewed_count }} review{{ 's' if most_reviewed_count > 1 else '' }})
+            {% else %}
+                No reviews yet.
+            {% endif %}
+        </p>
+    </div>
+
+    <br />
+    <div align="center">
+        <a href="/home">
+            <button type="button" class="btn btn-lg btn-secondary">Back</button>
+        </a>
+    </div>
+{% endblock %}

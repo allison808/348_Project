@@ -1,0 +1,104 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+    %}
+    <h1 align="center">{% block header %}Reviews{% endblock %}</h1>
+    <div id="reviews">
+      {% for review in reviews %}
+      <div class="card border-dark">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <a href="/reviews/{{review.user.username}}">{{review.user.username}}</a>
+          {% if user.id == review.author %}
+          <div class="btn-group">
+            <button
+              type="button"
+              class="btn btn-sm btn-primary dropdown-toggle"
+              data-bs-toggle="dropdown"
+            ></button>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="/edit-review/{{review.id}}" class="dropdown-item">Edit</a>
+              </li>
+              <li>
+                <a href="/delete-review/{{review.id}}" class="dropdown-item">Delete</a>
+              </li>
+            </ul>
+          </div>
+          {% endif %}
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ review.restaurant.name }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">Rating: {{ review.rating }}</h6>
+          <div class="card-text">{{review.text}}</div>
+          <br />
+          <div class="collapse" id="comments-{{review.id}}">
+            <div class="card">
+              <div class="card-body" id="comments-expanded-{{review.id}}">
+                {% for comment in review.comments %}
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <a href="/reviews/{{comment.user.username}}"
+                      >{{comment.user.username}}</a
+                    >: {{comment.text}}
+                  </div>
+                  <div>
+                    <small class="text-muted"> {{comment.date_created}}</small>
+                    {% if user.id == comment.author or user.id == review.author %}
+                    <div class="btn-group">
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-primary dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                      ></button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <a
+                            href="/delete-comment/{{comment.id}}"
+                            class="dropdown-item"
+                            >Delete</a
+                          >
+                        </li>
+                      </ul>
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <p class="card-text">
+            {% if review.comments|length > 0 %}
+            <a data-bs-toggle="collapse" href="#comments-{{review.id}}" role="button">
+              <small>View {{review.comments|length}} Comments</small>
+            </a>
+            {% else %}
+            <small class="text-muted">No Comments</small>
+            {% endif %}
+          </p>
+          <form
+            class="input-group mb-3"
+            method="POST"
+            action="/create-comment/{{review.id}}"
+          >
+            <input
+              type="text"
+              id="text"
+              name="text"
+              class="form-control"
+              placeholder="Comment something!"
+            />
+            <button type="submit" class="btn btn-primary">Comment</button>
+          </form>
+        </div>
+        <div class="card-footer text-muted">{{review.date_created}}</div>
+      </div>
+      <br/ > {% endfor %}
+    </div>
+    {% block footer %}
+    <div align="center">
+      <a href="/create-review"
+        ><button type="button" class="btn btn-primary btn-lg">
+          Create a Review
+        </button></a
+      >
+    </div>
+    {% endblock %} {% endblock %}
