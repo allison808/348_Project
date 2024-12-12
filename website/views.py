@@ -103,7 +103,6 @@ def edit_review(id):
                 flash("Review updated successfully!", category="success")
                 return redirect(url_for("views.home"))
             except Exception as e:
-                db.session.rollback()  # Rollback on failure to ensure consistency
                 flash(f"An error occurred: {str(e)}", category="error")
 
     restaurants = Restaurant.query.all() 
@@ -153,4 +152,3 @@ def delete_review(id):
         flash('Review deleted.', category='success')
 
     return redirect(url_for('views.home'))
-
